@@ -10,4 +10,4 @@ Coding Adventure with Zig \:)
 -   [ ] Chess AI (NN or Minimax)
 
 ## Progress
-![Progress](/public/progress_01.png)
+![Progress](/public/progress_02.png)

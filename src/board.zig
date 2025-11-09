@@ -16,7 +16,7 @@ const Piece = struct {
 // To decompose apply & 00111 mask
 // 10101
 // 00111
-// 00101 
+// 00101
 
 pub const Board = struct {
     squares: [64]u8,
@@ -24,9 +24,35 @@ pub const Board = struct {
     pub fn init() Board {
         var board: [64]u8 = .{Piece.Empty} ** 64;
 
-        board[0] = Piece.White | Piece.Knight;
-        board[63] = Piece.Black | Piece.Queen;
-        board[7] = Piece.Black | Piece.Knight;
+        // Black back rank
+        board[0] = Piece.Black | Piece.Rook;
+        board[1] = Piece.Black | Piece.Knight;
+        board[2] = Piece.Black | Piece.Bishop;
+        board[3] = Piece.Black | Piece.Queen;
+        board[4] = Piece.Black | Piece.King;
+        board[5] = Piece.Black | Piece.Bishop;
+        board[6] = Piece.Black | Piece.Knight;
+        board[7] = Piece.Black | Piece.Rook;
+
+        // Black pawns
+        for (0..8) |i| {
+            board[8 + i] = Piece.Black | Piece.Pawn;
+        }
+
+        // White pawns
+        for (0..8) |i| {
+            board[48 + i] = Piece.White | Piece.Pawn;
+        }
+
+        // White back rank
+        board[56] = Piece.White | Piece.Rook;
+        board[57] = Piece.White | Piece.Knight;
+        board[58] = Piece.White | Piece.Bishop;
+        board[59] = Piece.White | Piece.Queen;
+        board[60] = Piece.White | Piece.King;
+        board[61] = Piece.White | Piece.Bishop;
+        board[62] = Piece.White | Piece.Knight;
+        board[63] = Piece.White | Piece.Rook;
 
         return Board{ .squares = board };
     }
@@ -45,11 +71,11 @@ pub const Board = struct {
     }
 
     // bitwise witchcraft
-    fn get_piece(piece: u8) u8 {
-        return piece & 0b111; 
+    pub fn get_piece(piece: u8) u8 {
+        return piece & 0b111;
     }
 
-    fn get_color(piece: u8) u8 {
+    pub fn get_color(piece: u8) u8 {
         return piece & 0b11000;
     }
 };
