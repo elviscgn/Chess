@@ -9,18 +9,19 @@ const Piece = struct {
     pub const Queen = 5;
     pub const King = 6;
 
-    pub const White = 8; // 0b1000
+    pub const White = 8; // 0b01000
     pub const Black = 16; // 0b10000
 };
 
+// To decompose apply & 00111 mask
 // 10101
 // 00111
-//
+// 00101 
 
-const Board = struct {
+pub const Board = struct {
     squares: [64]u8,
 
-    fn init() Board {
+    pub fn init() Board {
         var board: [64]u8 = .{Piece.Empty} ** 64;
 
         board[0] = Piece.White | Piece.Knight;
@@ -52,11 +53,11 @@ const Board = struct {
         return piece & 0b11000;
     }
 };
-pub fn main() !void {
-    var board = Board.init();
-    Board.print(&board);
+// pub fn main() !void {
+//     var board = Board.init();
+//     Board.print(&board);
 
-    const random_piece = board.squares[63];
-    std.debug.print("{d}\n", .{Board.get_color(random_piece)});
-    std.debug.print("{d}", .{Board.get_piece(random_piece)});
-}
+//     const random_piece = board.squares[63];
+//     std.debug.print("{d}\n", .{Board.get_color(random_piece)});
+//     std.debug.print("{d}", .{Board.get_piece(random_piece)});
+// }
