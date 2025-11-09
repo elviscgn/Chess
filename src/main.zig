@@ -18,7 +18,6 @@ fn loadPieceTextures() ![12]rl.Texture {
     const queen_white = try rl.loadImage("src/resources/queen_white.png");
     const king_white = try rl.loadImage("src/resources/king_white.png");
 
-
     // pub const Pawn = 1;
     // pub const Knight = 2;
     // pub const Bishop = 3;
@@ -56,7 +55,10 @@ pub fn main() anyerror!void {
     const colWhite = rl.Color.init(233, 237, 249, 255);
 
     // Game state
-    const game_board = board.Board.init();
+    // const game_board = board.Board.init();
+
+    const fen = "3rr1k1/1ppqbpp1/p1n1pn1p/2bp4/2BPPB2/P1N2N1P/1PPQ1PP1/3RK2R";
+    const game_board = board.Board.fromFen(fen);
 
     // Sprites
 
@@ -98,7 +100,7 @@ pub fn main() anyerror!void {
         // void DrawRectangle(int posX, int posY, int width, int height, Color color);
 
         rl.drawText("Chess", 450, 0, 50, rl.Color.init(53, 55, 77, 255));
-        rl.drawText("Fen String: rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", 100, 60, 20, rl.Color.init(123, 97, 254, 255));
+        rl.drawText("Fen Repr: 3rr1k1/1ppqbpp1/p1n1pn1p/2bp4/2BPPB2/P1N2N1P/1PPQ1PP1/3RK2R", 100, 60, 20, rl.Color.init(123, 97, 254, 255));
 
         for (0..8) |i| {
             squareCol = @as(u1, @intCast(i % 2));
@@ -109,6 +111,11 @@ pub fn main() anyerror!void {
                 const infered_center_X = infered_X + squareSize / 2;
                 const infered_center_Y = infered_Y + squareSize / 2;
 
+                const center = rl.Vector2.init(@as(f32, @floatFromInt(infered_center_X - 18)), @as(f32, @floatFromInt(infered_center_Y - 20)));
+                const square_bit_number = game_board.squares[j * 8 + i];
+                const infered_color = board.Board.get_color(square_bit_number);
+                const infered_piece = board.Board.get_piece(square_bit_number);
+
                 //  print(f"({start+i*step},{start+j*step",end=" ")
                 if (squareCol == 0) {
                     rl.drawRectangle(infered_X, infered_Y, squareSize, squareSize, colWhite);
@@ -118,22 +125,9 @@ pub fn main() anyerror!void {
                     squareCol = 0;
                 }
 
-                // std.debug.print("{d}", .{game_board.squares[infered_index]});
-                // const aa = game_board.squares[infered_index];
-                // const chess_piece = rl.textFormat("%d", .{aa});
-
-                // rl.drawText(chess_piece, infered_center_X, infered_center_Y, 20, .black);
-
-                // const frameWidth = @as(f32, @floatCast(pawn_black.width/6));
-                // const frameHeight =  @as(f32, @floatCast(pawn_black.height));
-
-                // const sourceRec = rl.Rectangle.init(infered_center_X, infered_center_Y, frameWidth, frameHeight);
-                // pawn_black_texture.
-
-                const center = rl.Vector2.init(@as(f32, @floatFromInt(infered_center_X - 18)), @as(f32, @floatFromInt(infered_center_Y - 20)));
-                const square_bit_number = game_board.squares[j * 8 + i];
-                const infered_color = board.Board.get_color(square_bit_number);
-                const infered_piece = board.Board.get_piece(square_bit_number);
+                if ((j * 8 + i) == 6 * 8) {
+                    rl.drawRectangle(infered_X, infered_Y, squareSize, squareSize, rl.Color.init(176, 166, 253, 255));
+                }
 
                 if (square_bit_number != 0) {
                     const texture = if (infered_color == 8) textures[infered_piece - 1] else textures[infered_piece + 5];

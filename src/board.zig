@@ -1,16 +1,29 @@
 const std = @import("std");
 
-const Piece = struct {
-    pub const Empty = 0;
-    pub const Pawn = 1;
-    pub const Knight = 2;
-    pub const Bishop = 3;
-    pub const Rook = 4;
-    pub const Queen = 5;
-    pub const King = 6;
+// const Piece = struct {
+//     pub const Empty = 0;
+//     pub const Pawn = 1;
+//     pub const Knight = 2;
+//     pub const Bishop = 3;
+//     pub const Rook = 4;
+//     pub const Queen = 5;
+//     pub const King = 6;
 
-    pub const White = 8; // 0b01000
-    pub const Black = 16; // 0b10000
+//     pub const White = 8; // 0b01000
+//     pub const Black = 16; // 0b10000
+// };
+
+const Piece = struct {
+    pub const Empty: u8 = 0;
+    pub const Pawn: u8 = 1;
+    pub const Knight: u8 = 2;
+    pub const Bishop: u8 = 3;
+    pub const Rook: u8 = 4;
+    pub const Queen: u8 = 5;
+    pub const King: u8 = 6;
+
+    pub const White: u8 = 8; // 0b01000
+    pub const Black: u8 = 16; // 0b10000
 };
 
 // To decompose apply & 00111 mask
@@ -77,6 +90,45 @@ pub const Board = struct {
 
     pub fn get_color(piece: u8) u8 {
         return piece & 0b11000;
+    }
+
+    pub fn fromFen(fen: []const u8) Board {
+        var board: [64]u8 = .{Piece.Empty} ** 64;
+
+        var idx: usize = 0;
+        var i: usize = 0;
+
+        // read characters until first space (board layout part)
+        while (i < fen.len and fen[i] != ' ') : (i += 1) {
+            const c = fen[i];
+
+            switch (c) {
+                '/' => {}, // move to next rank, but nothing special needed
+                '1'...'8' => {
+                    idx += @intCast(c - '0'); // skip empty squares
+                },
+                else => {
+                    const is_upper = (c >= 'A' and c <= 'Z');
+                    const color = if (is_upper) Piece.White else Piece.Black;
+                    const lower = if (is_upper) c + 32 else c; // normalize to lowercase
+
+                    const piece: u8 = switch (lower) {
+                        'p' => Piece.Pawn,
+                        'n' => Piece.Knight,
+                        'b' => Piece.Bishop,
+                        'r' => Piece.Rook,
+                        'q' => Piece.Queen,
+                        'k' => Piece.King,
+                        else => Piece.Empty,
+                    };
+
+                    board[idx] = color | piece;
+                    idx += 1;
+                },
+            }
+        }
+
+        return Board{ .squares = board };
     }
 };
 // pub fn main() !void {
