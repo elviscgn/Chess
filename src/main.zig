@@ -1,8 +1,6 @@
 const rl = @import("raylib");
 
 pub fn main() anyerror!void {
-    // Initialization
-    //--------------------------------------------------------------------------------------
     const screenWidth = 800;
     const screenHeight = 450;
 
@@ -12,11 +10,8 @@ pub fn main() anyerror!void {
     rl.setTargetFPS(60);
 
     // Main game loop
-    while (!rl.windowShouldClose()) { // Detect window close button or ESC key
+    while (!rl.windowShouldClose()) {
         // Update
-        //----------------------------------------------------------------------------------
-        // TODO: Update your variables here
-        //----------------------------------------------------------------------------------
 
         // Draw
         //----------------------------------------------------------------------------------
