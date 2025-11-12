@@ -54,26 +54,11 @@ pub fn main() anyerror!void {
     const colBlack = rl.Color.init(183, 192, 216, 255);
     const colWhite = rl.Color.init(233, 237, 249, 255);
 
-    // Game state
-    // const game_board = board.Board.init();
-
+ 
     const fen = "3rr1k1/1ppqbpp1/p1n1pn1p/2bp4/2BPPB2/P1N2N1P/1PPQ1PP1/3RK2R";
     const game_board = board.Board.fromFen(fen);
 
-    // Sprites
-
-    // const bishop_black = rl.loadImage("./resources/bishop_black.png") catch |err| {};
-    // const knight_black = rl.loadImage("./resources/knight_black.png") catch |err| {};
-    // const rook_black = rl.loadImage("./resources/rook_black.png") catch |err| {};
-    // const queen_black = rl.loadImage("./resources/queen_black.png") catch |err| {};
-    // const king_black = rl.loadImage("./resources/king_black.png") catch |err| {};
-
-    // const pawn_white = rl.loadImage("./resources/pawn_white.png") catch |err| {};
-    // const bishop_white = rl.loadImage("./resources/bishop_white.png") catch |err| {};
-    // const knight_white = rl.loadImage("./resources/knight_white.png") catch |err| {};
-    // const rook_white = rl.loadImage("./resources/rook_white.png") catch |err| {};
-    // const queen_white = rl.loadImage("./resources/queen_white.png") catch |err| {};
-    // const king_white = rl.loadImage("./resources/king_white.png") catch |err| {};
+ 
 
     rl.initWindow(screenWidth, screenHeight, "Chess Coding Adventure");
     defer rl.closeWindow();
@@ -89,7 +74,8 @@ pub fn main() anyerror!void {
     // Main game loop
     while (!rl.windowShouldClose()) {
         // Update
-
+        const mousePositionX = rl.getMouseX();
+        const mousePositionY = rl.getMouseY();
         // Draw
         //----------------------------------------------------------------------------------
         rl.beginDrawing();
@@ -116,6 +102,8 @@ pub fn main() anyerror!void {
                 const infered_color = board.Board.get_color(square_bit_number);
                 const infered_piece = board.Board.get_piece(square_bit_number);
 
+                const inside_X = infered_X < mousePositionX and infered_X + squareSize > mousePositionX;
+                const inside_Y = infered_Y < mousePositionY and infered_Y + squareSize > mousePositionY;
                 //  print(f"({start+i*step},{start+j*step",end=" ")
                 if (squareCol == 0) {
                     rl.drawRectangle(infered_X, infered_Y, squareSize, squareSize, colWhite);
@@ -125,8 +113,8 @@ pub fn main() anyerror!void {
                     squareCol = 0;
                 }
 
-                if ((j * 8 + i) == 6 * 8) {
-                    rl.drawRectangle(infered_X, infered_Y, squareSize, squareSize, rl.Color.init(176, 166, 253, 255));
+                if (inside_X and inside_Y) {
+                    rl.drawRectangle(infered_X, infered_Y, squareSize, squareSize, .green);
                 }
 
                 if (square_bit_number != 0) {
